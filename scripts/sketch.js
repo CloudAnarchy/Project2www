@@ -21,7 +21,7 @@ async function is_id_set(){
     if (!isNaN(num = parseInt(arr[1]))) {
         console.log(num);
         // Getting info from the files
-        fetch(`http://localhost/testing/passData.php?id=${num}`)
+        fetch(`http://localhost/project2www/passData.php?id=${num}`)
         .then(result => {
 
             return receiveData(result.json());
@@ -87,7 +87,7 @@ function setupEventHandlers(){
     $('#reset-nodes-colors').bind('click', colorReset);
 
     // For showing border cells
-    $('#border-cells').bind('click', UIcontroll.showBorderCells);
+    $('#border-cells').bind('click', Utils.findBorderCells);
 
     $('#screenshot').bind('click', function(e){
         saveCanvas(DATA.canvas, 'myDesign', 'jpg');
@@ -131,7 +131,7 @@ function clickCell(){
 
 
     // Show it in the UI
-    UIcontroll.colorNode(cellClicked);
+    UIcontroll.colorCell(cellClicked);
 
 
 
@@ -180,49 +180,50 @@ const UIcontroll = {
         rowArr.forEach(cell => cell.reColor());
     },
 
-    colorNode: cell => {
+    colorCell: cell => {
         fill(Utils.colors[5]);
         cell.reColor();
 
         $('#cell-clicked')[0].innerHTML = `<span>name:</span> ${cell.name}<br><span>x:</span> ${cell.x}<br><span>y:</span> ${cell.y}<br><span>nets:</span> ${cell.nets}`;
     },
-    showBorderCells: function () {
-
-        let count = 0;
-        let arr = [];
-        let height = DATA.board.height - 16;
-        let width = DATA.board.width * 1;
-
-        fill(Utils.colors[6]);
-        DATA.cellsArr.forEach(cell => {
-            // 
-            if (cell.x === 0 || cell.y === 0 || cell.y === height || (cell.x + cell.width) >= width) {
-                count++;
-                cell.reColor();
-                arr.push(cell);
-            }
-
-        });
-        let el = $('#reveal-border-cell-info')[0];
-        el.innerHTML  =`There are <span><strong>${count}</strong></span> border cells`;
-        el.style.marginTop = '10px';
-        el.visibility = 'visible';
-
-        // console.log(`There are ${count} border cells`);
-        // console.log(arr);
-    },
     
+    colorCells: arr => {
+        fill(Utils.colors[6]);
+        arr.forEach(cell => cell.reColor());
+    },
+
     showPickedNet: id => {
         fill(DATA.netsArr[id].getColor());
 
         DATA.cellsArr.forEach(cell => {
             // If the cell contains the specific net (in his nets array) we asked for then it will return true
             isThereThatNet = cell.getNets().find(net => net === id);
-            if(isThereThatNet){
+            if (isThereThatNet) {
                 //console.log(cell);
                 cell.reColor();
             }
         });
+    },
+
+    showBorderCells: (nBorderCells) => {
+
+        let el = $('#reveal-border-cell-info')[0];
+        el.innerHTML = `There are <span><strong>${nBorderCells}</strong></span> border cells`;
+        el.style.marginTop = '10px';
+        el.visibility = 'visible';
+    },
+
+    showStas: statObj => {
+
+        let el = $('#reveal-statistics-info')[0];
+        el.innerHTML = `
+        <span><strong>${statObj.nNodes}</strong></span> cells</br>
+        <span><strong>${statObj.nNets}</strong></span> nets</br>
+        [<span><strong>${statObj.biggestNet.getID()}</strong></span>] biggest net</br>
+        <span><strong>${statObj.nRows}</strong></span> rows</br>
+        <span><strong>${statObj.nTerminals}</strong></span> terminal nodes</br>
+        <span><strong>${statObj.nNonTerminals}</strong></span> NON terminal nodes</br>
+        `;
     }
 }
 
@@ -256,7 +257,6 @@ const Utils = {
         return Math.round(Math.random() * num);
     },
 
-
     // We use function() here instead of => because with arrow functions
     // the this keyword uses the surrouding object which in this case is Window
     // this means when i use this. arrCells it created an attribute ti Window object
@@ -287,9 +287,6 @@ const Utils = {
     },
     
     createStats: () => {
-        let nNodes        = DATA.numNodes;
-        let nNets         = DATA.numNets;
-        let nRows         = DATA.numRows;
         let nTerminals    = 0;
         let nNonTerminals = 0;
         DATA.cellsArr.forEach(cell => cell.isTerminal ? nTerminals++ : nNonTerminals++);
@@ -301,9 +298,19 @@ const Utils = {
         });
         
         // Find the net with the most Nodes.
-        let max = netsArr[0];
-        netsArr.forEach(net => max.getArrCells().length < net.getArrCells().length ? max = net : max);
-        console.log(max);
+        let biggestNet = netsArr[0];
+        netsArr.forEach(net => biggestNet.getArrCells().length < net.getArrCells().length ? biggestNet = net : biggestNet);
+        console.log(biggestNet);
+
+        // Passing an obj containing the stats to the function
+        UIcontroll.showStas({
+            nNodes: DATA.numNodes,
+            nNets : DATA.numNets,
+            nRows : DATA.numRows,
+            nTerminals   : nTerminals,
+            nNonTerminals: nNonTerminals,
+            biggestNet   : biggestNet,  
+        });
 
     },
 
@@ -332,7 +339,25 @@ const Utils = {
     findNode: (cell_entered) => {
         let cell = DATA.cellsArr.find(tempCell => tempCell.getName() === cell_entered);
         console.log(cell);
-        UIcontroll.colorNode(cell);
+        UIcontroll.colorCell(cell);
     },
+    
+    findBorderCells: () => {
+        let count = 0;
+        let arr = [];
+        let height = DATA.board.height - 16;
+        let width = DATA.board.width * 1;
+
+        fill(Utils.colors[6]);
+        DATA.cellsArr.forEach(cell => {
+            if (cell.x === 0 || cell.y === 0 || cell.y === height || (cell.x + cell.width) >= width) {
+                arr.push(cell);
+                count++;
+            }
+        });
+        
+        UIcontroll.colorCells(arr);
+        UIcontroll.showBorderCells(count);
+    }
     
 };

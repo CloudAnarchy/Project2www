@@ -31,6 +31,7 @@ input[type="number"], input[type="text"]{
 
 span{
     color: rgb(241, 123, 44);
+    margin-top: 5px;
 }
 
 #title{
@@ -165,6 +166,10 @@ span{
 .reveal-border-cell-info{
     padding-top: 10px;
     visibility: hidden;
+}
+
+#reveal-statistics-info{
+    padding-top: 10px;
 }
 
 .small-btn{

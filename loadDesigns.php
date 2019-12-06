@@ -48,7 +48,7 @@ mysqli_close($connect);
         a,
         li,
         button {
-            style: none;
+            /* style: none; */
             text-decoration: none;
             color: white;
             list-style-type: none;
