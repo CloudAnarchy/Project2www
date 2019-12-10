@@ -21,7 +21,8 @@ async function is_id_set(){
     if (!isNaN(num = parseInt(arr[1]))) {
         console.log(num);
         // Getting info from the files
-        fetch(`http://localhost/project2www/passData.php?id=${num}`)
+        // http://localhost/project2www/passData.php?id=
+        fetch(`https://project2www.herokuapp.com/index.php?id=${num}`)
         .then(result => {
 
             return receiveData(result.json());

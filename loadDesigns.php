@@ -17,7 +17,7 @@ if (isset($_GET['load-design'])) {
 
 mysqli_close($connect);
 //header("Location: index.php");
-$home_link = "http://$_SERVER[HTTP_HOST]/project2www/index.php";
+// $home_link = "http://$_SERVER[HTTP_HOST]/project2www/index.php";
 
 ?>
 
@@ -98,7 +98,7 @@ $home_link = "http://$_SERVER[HTTP_HOST]/project2www/index.php";
         <?php endforeach; ?>
 
     </nav>
-    <a href="<?php echo $home_link ?>">
+    <a href="index.php">
         <svg class="arrow" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 492 492" style="enable-background:new 0 0 492 492;" xml:space="preserve">
             <path d="M464.344,207.418l0.768,0.168H135.888l103.496-103.724c5.068-5.064,7.848-11.924,7.848-19.124
                     c0-7.2-2.78-14.012-7.848-19.088L223.28,49.538c-5.064-5.064-11.812-7.864-19.008-7.864c-7.2,0-13.952,2.78-19.016,7.844

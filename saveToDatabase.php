@@ -16,8 +16,8 @@ function saveDesign($folderName){
         insertNewBoard($connect, $designID);
         mysqli_close($connect);
 
-
-        $dbh = new PDO("mysql:host=localhost;dbname=project2www", "root", "");
+        //mysqli_connect('eu-cdbr-west-02.cleardb.net', '', '081e1143', '', 3306);
+        $dbh = new PDO("mysql:host=eu-cdbr-west-02.cleardb.net;dbname=heroku_8e47c5bea080f34;port=3306;", "bcb3aac8f0de15", "081e1143");
         $file_paths = findFiles($folderName);
 
         foreach($file_paths as $filePath){
