@@ -22,7 +22,7 @@ async function is_id_set(){
         console.log(num);
         // Getting info from the files
         // http://localhost/project2www/passData.php?id=
-        fetch(`https://project2www.herokuapp.com/index.php?id=${num}`)
+        fetch(`https://project2www.herokuapp.com/passData.php?id=${num}`)
         .then(result => {
 
             return receiveData(result.json());
