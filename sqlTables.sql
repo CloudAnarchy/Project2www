@@ -1,0 +1,30 @@
+CREATE TABLE designs(
+     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(255) NOT NULL,
+     net_count INT NOT NULL,
+     n_nodes INT NOT NULL
+);
+
+CREATE TABLE boards(
+    id INT NOT NULL AUTO_INCREMENT,
+    designID INT NOT NULL,
+    width INT NOT NULL,
+    height INT NOT NULL,
+    n_rows INT NOT NULL,
+    rows_height INT NOT NULL,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (designID) REFERENCES designs(ID)
+    ON DELETE CASCADE ON UPDATE CASCADE
+    
+);
+
+
+CREATE TABLE files (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(100) NOT NULL,
+    data LONGBLOB NOT NULL,
+    designID INT NOT NULL,
+    FOREIGN KEY (designID) REFERENCES designs(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+);

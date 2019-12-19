@@ -224,6 +224,7 @@ const UIcontroll = {
         <span><strong>${statObj.nRows}</strong></span> rows</br>
         <span><strong>${statObj.nTerminals}</strong></span> terminal nodes</br>
         <span><strong>${statObj.nNonTerminals}</strong></span> NON terminal nodes</br>
+        <span><strong>${statObj.semiPerimeter}</strong></span> semi-perimeter length from all nodes</br>
         `;
     }
 }
@@ -301,8 +302,25 @@ const Utils = {
         // Find the net with the most Nodes.
         let biggestNet = netsArr[0];
         netsArr.forEach(net => biggestNet.getArrCells().length < net.getArrCells().length ? biggestNet = net : biggestNet);
-        console.log(biggestNet);
+        //console.log(biggestNet);
 
+        let semiPerimeterSum = 0;
+        DATA.netsArr.forEach(net => {
+            const cells = net.getArrCells();
+            if(cells.length > 0){
+                let maxX = cells[0].x, maxY = cells[0].y;
+                let minX = cells[0].x, minY = cells[0].y;
+    
+                cells.forEach(cell => {
+                    if (cell.getX() > maxX) maxX = cell.x;
+                    if (cell.getX() < minX) minX = cell.x;
+                    if (cell.getY() > maxY) maxY = cell.y;
+                    if (cell.getY() < minY) minY = cell.y;
+                });
+                semiPerimeterSum += Math.abs(maxX - minX) + Math.abs(maxY - minY);
+                console.log(semiPerimeterSum);
+            }
+        });
         // Passing an obj containing the stats to the function
         UIcontroll.showStas({
             nNodes: DATA.numNodes,
@@ -310,7 +328,8 @@ const Utils = {
             nRows : DATA.numRows,
             nTerminals   : nTerminals,
             nNonTerminals: nNonTerminals,
-            biggestNet   : biggestNet,  
+            biggestNet   : biggestNet,
+            semiPerimeter: semiPerimeterSum
         });
 
     },
